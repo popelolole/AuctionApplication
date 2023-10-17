@@ -11,11 +11,12 @@
         private List<Bid> _bids = new List<Bid>();
         public IEnumerable<Bid> Bids => _bids;
 
-        public Auction(int id, string name, string userName, int startingPrice, DateTime closingTime) 
+        public Auction(string name, string userName, string description, int startingPrice, DateTime closingTime)
         {
-            Id = id;
+            Id = 0;
             Name = name;
             UserName = userName;
+            Description = description;
             StartingPrice = startingPrice;
             ClosingTime = closingTime;
         }

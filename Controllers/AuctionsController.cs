@@ -27,11 +27,13 @@ namespace AuctionApplication.Controllers
             return View(auctionVMs);
         }
 
-        /*
+        
         // GET: AuctionsController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            Auction auction = _auctionService.GetById(id);
+            AuctionDetailsVM detailsVM = AuctionDetailsVM.FromAuction(auction);
+            return View(detailsVM);
         }
 
         // GET: AuctionsController/Create
@@ -43,18 +45,22 @@ namespace AuctionApplication.Controllers
         // POST: AuctionsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(CreateAuctionVM vm)
         {
-            try
+            if(ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                Auction auction = new Auction(vm.Name,
+                                              "user",
+                                              (vm.Description!=null?vm.Description:"-"),
+                                              vm.StartingPrice,
+                                              vm.ClosingTime);
+                _auctionService.Add(auction);
+                return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            return View(vm);
         }
 
+        /*
         // GET: AuctionsController/Edit/5
         public ActionResult Edit(int id)
         {

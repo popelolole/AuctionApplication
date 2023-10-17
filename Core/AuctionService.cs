@@ -15,5 +15,16 @@ namespace AuctionApplication.Core
         {
             return _auctionPersistence.GetAll();
         }
+
+        public Auction GetById(int id)
+        {
+            return _auctionPersistence.GetById(id);
+        }
+
+        public void Add(Auction auction)
+        {
+            if (auction == null || auction.Id != 0) throw new InvalidDataException();
+            _auctionPersistence.Add(auction);
+        }
     }
 }

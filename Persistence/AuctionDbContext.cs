@@ -12,16 +12,38 @@ namespace AuctionApplication.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AuctionDB>().HasData(
-                new AuctionDB
-                {
-                    Id = -1,
-                    Name = "Test",
-                    Description = "En test auktion",
-                    UserName = "admin",
-                    StartingPrice = 100,
-                    ClosingTime = new DateTime(2023, 10, 17, 12, 0, 0)
-                });
+            AuctionDB adb = new AuctionDB()
+            {
+                Id = -1,
+                Name = "Test",
+                Description = "En test auktion",
+                UserName = "admin",
+                StartingPrice = 100,
+                ClosingTime = new DateTime(2023, 10, 17, 12, 0, 0)
+            };
+
+            modelBuilder.Entity<AuctionDB>().HasData(adb);
+
+            BidDB bdb1 = new BidDB()
+            {
+                Id = -1,
+                UserName = "admin",
+                Price = 500,
+                CreatedDate = DateTime.Now,
+                AuctionId = -1
+            };
+
+            BidDB bdb2 = new BidDB()
+            {
+                Id = -2,
+                UserName = "admin",
+                Price = 1000,
+                CreatedDate = DateTime.Now,
+                AuctionId = -1
+            };
+
+            modelBuilder.Entity<BidDB>().HasData(bdb1);
+            modelBuilder.Entity<BidDB>().HasData(bdb2);
         }
     }
 }
