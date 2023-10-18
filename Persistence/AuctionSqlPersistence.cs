@@ -41,6 +41,22 @@ namespace AuctionApplication.Persistence
             return result;
         }
 
+        public List<Auction> GetAllByUserName(string userName)
+        {
+            var auctionDbs = _dbContext.AuctionDBs
+                .Where(p => p.UserName.Equals(userName))
+                .Include(p => p.BidDBs)
+                .ToList();
+
+            List<Auction> result = new List<Auction>();
+            foreach (AuctionDB adb in auctionDbs)
+            {
+                Auction auction = _mapper.Map<Auction>(adb);
+                result.Add(auction);
+            }
+            return result;
+        }
+
         public Auction GetById(int id)
         {
             var auctionDb = _dbContext.AuctionDBs

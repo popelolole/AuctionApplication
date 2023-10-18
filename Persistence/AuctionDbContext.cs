@@ -17,7 +17,7 @@ namespace AuctionApplication.Persistence
                 Id = -1,
                 Name = "Test",
                 Description = "En test auktion",
-                UserName = "admin",
+                UserName = "pellebe@kth.se",
                 StartingPrice = 100,
                 ClosingTime = new DateTime(2023, 10, 17, 12, 0, 0)
             };
@@ -27,7 +27,7 @@ namespace AuctionApplication.Persistence
             BidDB bdb1 = new BidDB()
             {
                 Id = -1,
-                UserName = "admin",
+                UserName = "pellebe@kth.se",
                 Price = 500,
                 CreatedDate = DateTime.Now,
                 AuctionId = -1
@@ -36,7 +36,7 @@ namespace AuctionApplication.Persistence
             BidDB bdb2 = new BidDB()
             {
                 Id = -2,
-                UserName = "admin",
+                UserName = "pellebe@kth.se",
                 Price = 1000,
                 CreatedDate = DateTime.Now,
                 AuctionId = -1

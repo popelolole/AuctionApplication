@@ -17,10 +17,10 @@ namespace AuctionApplication.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("AuctionApplication.Persistence.AuctionDB", b =>
                 {
@@ -28,7 +28,7 @@ namespace AuctionApplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("ClosingTime")
                         .HasColumnType("datetime2");
@@ -63,7 +63,7 @@ namespace AuctionApplication.Migrations
                             Description = "En test auktion",
                             Name = "Test",
                             StartingPrice = 100,
-                            UserName = "admin"
+                            UserName = "pellebe@kth.se"
                         });
                 });
 
@@ -73,7 +73,7 @@ namespace AuctionApplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("AuctionId")
                         .HasColumnType("int");
@@ -100,17 +100,17 @@ namespace AuctionApplication.Migrations
                         {
                             Id = -1,
                             AuctionId = -1,
-                            CreatedDate = new DateTime(2023, 10, 17, 11, 39, 2, 586, DateTimeKind.Local).AddTicks(8385),
+                            CreatedDate = new DateTime(2023, 10, 18, 10, 58, 6, 910, DateTimeKind.Local).AddTicks(5137),
                             Price = 500,
-                            UserName = "admin"
+                            UserName = "pellebe@kth.se"
                         },
                         new
                         {
                             Id = -2,
                             AuctionId = -1,
-                            CreatedDate = new DateTime(2023, 10, 17, 11, 39, 2, 586, DateTimeKind.Local).AddTicks(8424),
+                            CreatedDate = new DateTime(2023, 10, 18, 10, 58, 6, 910, DateTimeKind.Local).AddTicks(5175),
                             Price = 1000,
-                            UserName = "admin"
+                            UserName = "pellebe@kth.se"
                         });
                 });
 

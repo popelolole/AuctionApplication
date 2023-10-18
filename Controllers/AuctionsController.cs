@@ -1,11 +1,13 @@
 ﻿using AuctionApplication.Core;
 using AuctionApplication.Core.Interfaces;
 using AuctionApplication.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuctionApplication.Controllers
 {
+    [Authorize]
     public class AuctionsController : Controller
     {
         private readonly IAuctionService _auctionService;
@@ -36,6 +38,19 @@ namespace AuctionApplication.Controllers
             return View(detailsVM);
         }
 
+        // GET: AuctionsController/Created
+        public ActionResult Created()
+        {
+            string userName = User.Identity.Name;
+            List<Auction> auctions = _auctionService.GetAllByUserName(userName);
+            List<AuctionVM> auctionVMs = new();
+            foreach (var auction in auctions)
+            {
+                auctionVMs.Add(AuctionVM.FromAuction(auction));
+            }
+            return View(auctionVMs);
+        }
+
         // GET: AuctionsController/Create
         public ActionResult Create()
         {
@@ -47,10 +62,11 @@ namespace AuctionApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateAuctionVM vm)
         {
+            string userName = User.Identity.Name;
             if(ModelState.IsValid)
             {
                 Auction auction = new Auction(vm.Name,
-                                              "user",
+                                              userName,
                                               (vm.Description!=null?vm.Description:"-"),
                                               vm.StartingPrice,
                                               vm.ClosingTime);
@@ -72,6 +88,7 @@ namespace AuctionApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
+            if(!auction.UserName.Equals(User.Identity.Name)) return BadRequest();
             try
             {
                 return RedirectToAction(nameof(Index));
