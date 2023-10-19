@@ -11,5 +11,7 @@
         public Auction GetById(int id);
 
         void Add(Auction auction);
+
+        void Edit(int id, string description);
     }
 }

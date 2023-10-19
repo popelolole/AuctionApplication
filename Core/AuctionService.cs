@@ -36,5 +36,10 @@ namespace AuctionApplication.Core
             if (auction == null || auction.Id != 0) throw new InvalidDataException();
             _auctionPersistence.Add(auction);
         }
+
+        public void Edit(int id, string description)
+        {
+            _auctionPersistence.Edit(id, description);
+        }
     }
 }

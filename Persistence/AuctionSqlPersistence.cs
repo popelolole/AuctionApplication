@@ -97,5 +97,13 @@ namespace AuctionApplication.Persistence
             _dbContext.AuctionDBs.Add(adb);
             _dbContext.SaveChanges();
         }
+
+        public void Edit(int id, string description)
+        {
+            var adb = _dbContext.AuctionDBs
+                .Find(id);
+            adb.Description = description;
+            _dbContext.SaveChanges();
+        }
     }
 }

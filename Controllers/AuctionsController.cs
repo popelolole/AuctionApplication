@@ -84,12 +84,11 @@ namespace AuctionApplication.Controllers
                                               vm.StartingPrice,
                                               vm.ClosingTime);
                 _auctionService.Add(auction);
-                return RedirectToAction("Index");
+                return RedirectToAction("Created");
             }
             return View(vm);
         }
 
-        /*
         // GET: AuctionsController/Edit/5
         public ActionResult Edit(int id)
         {
@@ -99,19 +98,20 @@ namespace AuctionApplication.Controllers
         // POST: AuctionsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, EditAuctionVM vm)
         {
+            Auction auction = _auctionService.GetById(id);
             if(!auction.UserName.Equals(User.Identity.Name)) return BadRequest();
-            try
+
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                _auctionService.Edit(id, vm.Description);
+                return RedirectToAction("Created");
             }
-            catch
-            {
-                return View();
-            }
+            return View(vm);
         }
 
+        /*
         // GET: AuctionsController/Delete/5
         public ActionResult Delete(int id)
         {
