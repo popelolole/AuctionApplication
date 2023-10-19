@@ -43,20 +43,22 @@ namespace AuctionApplication.Core
             _auctionPersistence.Edit(id, description);
         }
 
-        public void Place(Bid bid)
+        public Boolean Place(Bid bid)
         {
             Auction auction = GetById(bid.AuctionId);
             if (bid == null || bid.Id != 0 || bid.Price < 0) throw new InvalidDataException();
+
             if (!auction.Bids.Any())
             {
-                // Inform view of invalid bid price
-                if (bid.Price < auction.StartingPrice) return;
+                if (bid.Price < auction.StartingPrice) return false;
             }
             else
             {
-                if (bid.Price < auction.Bids.First().Price) return;
+                if (bid.Price < auction.Bids.First().Price) return false;
             }
+
             _auctionPersistence.Place(bid);
+            return true;
         }
     }
 }

@@ -128,8 +128,11 @@ namespace AuctionApplication.Controllers
             if (ModelState.IsValid)
             {
                 Bid bid = new Bid(User.Identity.Name, vm.Price, id);
-                _auctionService.Place(bid);
-                return RedirectToAction("Index");
+                bool success = _auctionService.Place(bid);
+                if(success)
+                    return RedirectToAction("Details", new { id });
+                ModelState.AddModelError("Price", "Bid must be larger than highest bid and starting price.");
+                return View(vm);
             }
             return View(vm);
         }
