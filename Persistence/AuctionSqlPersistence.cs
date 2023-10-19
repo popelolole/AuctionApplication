@@ -22,6 +22,7 @@ namespace AuctionApplication.Persistence
             var auctionDbs = _dbContext.AuctionDBs
                 .Where(p => true)
                 .Include(p => p.BidDBs)
+                .OrderBy(p => p.ClosingTime)
                 .ToList();
 
             List<Auction> result = new List<Auction>();
@@ -41,11 +42,29 @@ namespace AuctionApplication.Persistence
             return result;
         }
 
+        public List<Auction> GetAllActive()
+        {
+            var auctionDbs = _dbContext.AuctionDBs
+                .Where(p => p.ClosingTime >= DateTime.Now)
+                .Include(p => p.BidDBs)
+                .OrderBy(p => p.ClosingTime)
+                .ToList();
+
+            List<Auction> result = new List<Auction>();
+            foreach (AuctionDB adb in auctionDbs)
+            {
+                Auction auction = _mapper.Map<Auction>(adb);
+                result.Add(auction);
+            }
+            return result;
+        }
+
         public List<Auction> GetAllByUserName(string userName)
         {
             var auctionDbs = _dbContext.AuctionDBs
                 .Where(p => p.UserName.Equals(userName))
                 .Include(p => p.BidDBs)
+                .OrderBy(p => p.ClosingTime)
                 .ToList();
 
             List<Auction> result = new List<Auction>();

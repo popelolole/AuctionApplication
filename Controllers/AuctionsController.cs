@@ -20,7 +20,7 @@ namespace AuctionApplication.Controllers
         // GET: AuctionsController
         public ActionResult Index()
         {
-            List<Auction> auctions = _auctionService.GetAll();
+            List<Auction> auctions = _auctionService.GetAllActive();
             List<AuctionVM> auctionVMs = new();
             foreach(var auction in auctions)
             {
@@ -43,6 +43,19 @@ namespace AuctionApplication.Controllers
         {
             string userName = User.Identity.Name;
             List<Auction> auctions = _auctionService.GetAllByUserName(userName);
+            List<AuctionVM> auctionVMs = new();
+            foreach (var auction in auctions)
+            {
+                auctionVMs.Add(AuctionVM.FromAuction(auction));
+            }
+            return View(auctionVMs);
+        }
+
+        // JUST FOR TESTING
+        // GET: AuctionsController/All
+        public ActionResult All()
+        {
+            List<Auction> auctions = _auctionService.GetAll();
             List<AuctionVM> auctionVMs = new();
             foreach (var auction in auctions)
             {
