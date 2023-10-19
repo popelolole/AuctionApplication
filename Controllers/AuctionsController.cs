@@ -111,6 +111,29 @@ namespace AuctionApplication.Controllers
             return View(vm);
         }
 
+        // GET: AuctionsController/Bid/5
+        public ActionResult Bid(int id)
+        {
+            return View();
+        }
+
+        // POST: AuctionsController/Bid/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Bid(int id, PlaceBidVM vm)
+        {
+            Auction auction = _auctionService.GetById(id);
+            if (auction.UserName.Equals(User.Identity.Name)) return BadRequest();
+
+            if (ModelState.IsValid)
+            {
+                Bid bid = new Bid(User.Identity.Name, vm.Price, id);
+                _auctionService.Place(bid);
+                return RedirectToAction("Index");
+            }
+            return View(vm);
+        }
+
         /*
         // GET: AuctionsController/Delete/5
         public ActionResult Delete(int id)

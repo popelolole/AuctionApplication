@@ -8,5 +8,6 @@
         Auction GetById(int id);
         void Add(Auction auction);
         void Edit(int id, string userName);
+        void Place(Bid bid);
     }
 }

@@ -21,7 +21,7 @@ namespace AuctionApplication.Persistence
         {
             var auctionDbs = _dbContext.AuctionDBs
                 .Where(p => true)
-                .Include(p => p.BidDBs)
+                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
                 .OrderBy(p => p.ClosingTime)
                 .ToList();
 
@@ -46,7 +46,7 @@ namespace AuctionApplication.Persistence
         {
             var auctionDbs = _dbContext.AuctionDBs
                 .Where(p => p.ClosingTime >= DateTime.Now)
-                .Include(p => p.BidDBs)
+                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
                 .OrderBy(p => p.ClosingTime)
                 .ToList();
 
@@ -63,7 +63,7 @@ namespace AuctionApplication.Persistence
         {
             var auctionDbs = _dbContext.AuctionDBs
                 .Where(p => p.UserName.Equals(userName))
-                .Include(p => p.BidDBs)
+                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
                 .OrderBy(p => p.ClosingTime)
                 .ToList();
 
@@ -79,7 +79,7 @@ namespace AuctionApplication.Persistence
         public Auction GetById(int id)
         {
             var auctionDb = _dbContext.AuctionDBs
-                .Include(p => p.BidDBs)
+                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
                 .Where(p => p.Id == id)
                 .SingleOrDefault();
 
@@ -103,6 +103,13 @@ namespace AuctionApplication.Persistence
             var adb = _dbContext.AuctionDBs
                 .Find(id);
             adb.Description = description;
+            _dbContext.SaveChanges();
+        }
+
+        public void Place(Bid bid)
+        {
+            BidDB bdb = _mapper.Map<BidDB>(bid);
+            _dbContext.BidDBs.Add(bdb);
             _dbContext.SaveChanges();
         }
     }
