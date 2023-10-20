@@ -17,9 +17,9 @@ namespace AuctionApplication.Core
             return _auctionPersistence.GetAll();
         }
 
-        public List<Auction> GetAllActive()
+        public List<Auction> GetAllActive(string userName)
         {
-            return _auctionPersistence.GetAllActive();
+            return _auctionPersistence.GetAllActive(userName);
         }
 
         public List<Auction> GetAllByUserName(string userName)
@@ -54,7 +54,7 @@ namespace AuctionApplication.Core
             }
             else
             {
-                if (bid.Price < auction.Bids.First().Price) return false;
+                if (bid.Price <= auction.Bids.First().Price) return false;
             }
 
             _auctionPersistence.Place(bid);

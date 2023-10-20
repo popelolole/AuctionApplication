@@ -20,7 +20,7 @@ namespace AuctionApplication.Controllers
         // GET: AuctionsController
         public ActionResult Index()
         {
-            List<Auction> auctions = _auctionService.GetAllActive();
+            List<Auction> auctions = _auctionService.GetAllActive(User.Identity.Name);
             List<AuctionVM> auctionVMs = new();
             foreach(var auction in auctions)
             {
@@ -114,6 +114,8 @@ namespace AuctionApplication.Controllers
         // GET: AuctionsController/Bid/5
         public ActionResult Bid(int id)
         {
+            Auction auction = _auctionService.GetById(id);
+            if (auction.UserName.Equals(User.Identity.Name)) return BadRequest();
             return View();
         }
 

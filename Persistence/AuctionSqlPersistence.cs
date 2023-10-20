@@ -42,10 +42,10 @@ namespace AuctionApplication.Persistence
             return result;
         }
 
-        public List<Auction> GetAllActive()
+        public List<Auction> GetAllActive(string userName)
         {
             var auctionDbs = _dbContext.AuctionDBs
-                .Where(p => p.ClosingTime >= DateTime.Now)
+                .Where(p => p.ClosingTime >= DateTime.Now && p.UserName != userName)
                 .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
                 .OrderBy(p => p.ClosingTime)
                 .ToList();
