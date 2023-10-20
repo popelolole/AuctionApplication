@@ -8,6 +8,8 @@
 
         List<Auction> GetAllByUserName(string userName);
 
+        List<Auction> GetAllActiveByBidUserName(string userName);
+
         public Auction GetById(int id);
 
         void Add(Auction auction);

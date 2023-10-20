@@ -27,6 +27,11 @@ namespace AuctionApplication.Core
             return _auctionPersistence.GetAllByUserName(userName);
         }
 
+        public List<Auction> GetAllActiveByBidUserName(string userName)
+        {
+            return _auctionPersistence.GetAllActiveByBidUserName(userName);
+        }
+
         public Auction GetById(int id)
         {
             return _auctionPersistence.GetById(id);

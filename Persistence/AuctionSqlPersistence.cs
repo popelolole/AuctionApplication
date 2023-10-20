@@ -76,6 +76,24 @@ namespace AuctionApplication.Persistence
             return result;
         }
 
+        public List<Auction> GetAllActiveByBidUserName(string userName)
+        {
+            var auctionDbs = _dbContext.AuctionDBs
+                .Where(p => p.ClosingTime >= DateTime.Now 
+                    && p.BidDBs.Any(b => b.UserName.Equals(userName)))
+                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
+                .OrderBy(p => p.ClosingTime)
+                .ToList();
+
+            List<Auction> result = new List<Auction>();
+            foreach (AuctionDB adb in auctionDbs)
+            {
+                Auction auction = _mapper.Map<Auction>(adb);
+                result.Add(auction);
+            }
+            return result;
+        }
+
         public Auction GetById(int id)
         {
             var auctionDb = _dbContext.AuctionDBs

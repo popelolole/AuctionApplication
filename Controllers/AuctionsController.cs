@@ -51,6 +51,18 @@ namespace AuctionApplication.Controllers
             return View(auctionVMs);
         }
 
+        public ActionResult MyBids()
+        {
+            string userName = User.Identity.Name;
+            List<Auction> auctions = _auctionService.GetAllActiveByBidUserName(userName);
+            List<AuctionVM> auctionVMs = new();
+            foreach (var auction in auctions)
+            {
+                auctionVMs.Add(AuctionVM.FromAuction(auction));
+            }
+            return View(auctionVMs);
+        }
+
         // JUST FOR TESTING
         // GET: AuctionsController/All
         public ActionResult All()
