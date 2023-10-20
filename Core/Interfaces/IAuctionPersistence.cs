@@ -10,6 +10,8 @@
 
         List<Auction> GetAllActiveByBidUserName(string userName);
 
+        List<Auction> GetAllWonByUserName(string userName);
+
         public Auction GetById(int id);
 
         void Add(Auction auction);

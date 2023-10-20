@@ -1,4 +1,5 @@
-﻿using AuctionApplication.Core;
+﻿using System.Media;
+using AuctionApplication.Core;
 using AuctionApplication.Core.Interfaces;
 using AuctionApplication.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -63,6 +64,18 @@ namespace AuctionApplication.Controllers
             return View(auctionVMs);
         }
 
+        public ActionResult Won()
+        {
+            string userName = User.Identity.Name;
+            List<Auction> auctions = _auctionService.GetAllWonByUserName(userName);
+            List<AuctionVM> auctionVMs = new();
+            foreach (var auction in auctions)
+            {
+                auctionVMs.Add(AuctionVM.FromAuction(auction));
+            }
+            return View(auctionVMs);
+        }
+
         // JUST FOR TESTING
         // GET: AuctionsController/All
         public ActionResult All()
@@ -104,6 +117,8 @@ namespace AuctionApplication.Controllers
         // GET: AuctionsController/Edit/5
         public ActionResult Edit(int id)
         {
+            Auction auction = _auctionService.GetById(id);
+            if (!auction.UserName.Equals(User.Identity.Name)) return BadRequest();
             return View();
         }
 
@@ -127,7 +142,7 @@ namespace AuctionApplication.Controllers
         public ActionResult Bid(int id)
         {
             Auction auction = _auctionService.GetById(id);
-            if (auction.UserName.Equals(User.Identity.Name)) return BadRequest();
+            if (auction.UserName.Equals(User.Identity.Name) || auction.ClosingTime < DateTime.Now) return BadRequest();
             return View();
         }
 
@@ -143,36 +158,36 @@ namespace AuctionApplication.Controllers
             if (ModelState.IsValid)
             {
                 Bid bid = new Bid(User.Identity.Name, vm.Price, id);
-                bool success = _auctionService.Place(bid);
-                if(success)
+                ValidationResult result = _auctionService.Place(bid);
+                if(result.IsSuccess)
                     return RedirectToAction("Details", new { id });
-                ModelState.AddModelError("Price", "Bid must be larger than highest bid and starting price.");
+                ModelState.AddModelError("Price", result.ErrorMessage);
                 return View(vm);
             }
             return View(vm);
         }
 
         /*
-        // GET: AuctionsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+// GET: AuctionsController/Delete/5
+public ActionResult Delete(int id)
+{
+return View();
+}
 
-        // POST: AuctionsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        */
+// POST: AuctionsController/Delete/5
+[HttpPost]
+[ValidateAntiForgeryToken]
+public ActionResult Delete(int id, IFormCollection collection)
+{
+try
+{
+return RedirectToAction(nameof(Index));
+}
+catch
+{
+return View();
+}
+}
+*/
     }
 }

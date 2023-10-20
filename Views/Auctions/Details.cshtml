@@ -51,7 +51,7 @@
 <div>
     <h4>Bids</h4>
     <hr />
-    @if (!User.Identity.Name.Equals(Model.UserName)) {
+    @if (!User.Identity.Name.Equals(Model.UserName) && Model.ClosingTime >= DateTime.Now) {
         @Html.ActionLink("Place a bid", "Bid", new { id = Model.Id })
     }
     <table class="table">
