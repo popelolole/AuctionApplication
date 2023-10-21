@@ -1,18 +1,24 @@
 using AuctionApplication.Core;
 using AuctionApplication.Core.Interfaces;
 using AuctionApplication.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using AuctionApplication.Data;
 using AuctionApplication.Areas.Identity.Data;
+using AuctionApplication.Persistence.Repositories;
+using AuctionApplication.Persistence.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddScoped<IAuctionService, AuctionService>();
 builder.Services.AddScoped<IAuctionPersistence, AuctionSqlPersistence>();
 
+builder.Services.AddScoped<IBidRepository, BidRepository>();
+builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddDbContext<AuctionDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AuctionDbConnection")));

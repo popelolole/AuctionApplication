@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Intrinsics.Arm;
 using AuctionApplication.Core;
 using AuctionApplication.Core.Interfaces;
+using AuctionApplication.Persistence.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,34 +9,22 @@ namespace AuctionApplication.Persistence
 {
     public class AuctionSqlPersistence : IAuctionPersistence
     {
-        private AuctionDbContext _dbContext;
         private IMapper _mapper;
+        private IUnitOfWork _unitOfWork;
 
-        public AuctionSqlPersistence(AuctionDbContext dbContext, IMapper mapper) 
+        public AuctionSqlPersistence(IUnitOfWork unitOfWork, IMapper mapper) 
         {
-            _dbContext = dbContext;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public List<Auction> GetAll()
         {
-            var auctionDbs = _dbContext.AuctionDBs
-                .Where(p => true)
-                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
-                .OrderBy(p => p.ClosingTime)
-                .ToList();
+            var auctionDbs = _unitOfWork.Auctions.GetAll();
 
             List<Auction> result = new List<Auction>();
             foreach(AuctionDB adb in auctionDbs)
             {
-                /*Auction auction = new Auction(
-                    adb.Id,
-                    adb.Name,
-                    adb.UserName,
-                    adb.StartingPrice,
-                    adb.ClosingTime);
-                result.Add(auction);*/
-
                 Auction auction = _mapper.Map<Auction>(adb);
                 result.Add(auction);
             }
@@ -44,11 +33,7 @@ namespace AuctionApplication.Persistence
 
         public List<Auction> GetAllActive(string userName)
         {
-            var auctionDbs = _dbContext.AuctionDBs
-                .Where(p => p.ClosingTime >= DateTime.Now && p.UserName != userName)
-                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
-                .OrderBy(p => p.ClosingTime)
-                .ToList();
+            var auctionDbs = _unitOfWork.Auctions.GetAllActive(userName);
 
             List<Auction> result = new List<Auction>();
             foreach (AuctionDB adb in auctionDbs)
@@ -61,11 +46,7 @@ namespace AuctionApplication.Persistence
 
         public List<Auction> GetAllByUserName(string userName)
         {
-            var auctionDbs = _dbContext.AuctionDBs
-                .Where(p => p.UserName.Equals(userName))
-                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
-                .OrderBy(p => p.ClosingTime)
-                .ToList();
+            var auctionDbs = _unitOfWork.Auctions.GetAllByUserName(userName);
 
             List<Auction> result = new List<Auction>();
             foreach (AuctionDB adb in auctionDbs)
@@ -78,12 +59,7 @@ namespace AuctionApplication.Persistence
 
         public List<Auction> GetAllActiveByBidUserName(string userName)
         {
-            var auctionDbs = _dbContext.AuctionDBs
-                .Where(p => p.ClosingTime >= DateTime.Now 
-                    && p.BidDBs.Any(b => b.UserName.Equals(userName)))
-                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
-                .OrderBy(p => p.ClosingTime)
-                .ToList();
+            var auctionDbs = _unitOfWork.Auctions.GetAllActiveByBidUserName(userName);
 
             List<Auction> result = new List<Auction>();
             foreach (AuctionDB adb in auctionDbs)
@@ -96,12 +72,7 @@ namespace AuctionApplication.Persistence
 
         public List<Auction> GetAllWonByUserName(string userName)
         {
-            var auctionDbs = _dbContext.AuctionDBs
-                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
-                .Where(p => p.ClosingTime < DateTime.Now
-                    && p.BidDBs.First().UserName.Equals(userName))
-                .OrderBy(p => p.ClosingTime)
-                .ToList();
+            var auctionDbs = _unitOfWork.Auctions.GetAllWonByUserName(userName);
 
             List<Auction> result = new List<Auction>();
             foreach (AuctionDB adb in auctionDbs)
@@ -114,10 +85,7 @@ namespace AuctionApplication.Persistence
 
         public Auction GetById(int id)
         {
-            var auctionDb = _dbContext.AuctionDBs
-                .Include(p => p.BidDBs.OrderByDescending(b => b.Price))
-                .Where(p => p.Id == id)
-                .SingleOrDefault();
+            var auctionDb = _unitOfWork.Auctions.GetById(id);
 
             Auction auction = _mapper.Map<Auction>(auctionDb);
             foreach(BidDB bdb in auctionDb.BidDBs)
@@ -130,23 +98,22 @@ namespace AuctionApplication.Persistence
         public void Add(Auction auction)
         {
             AuctionDB adb = _mapper.Map<AuctionDB>(auction);
-            _dbContext.AuctionDBs.Add(adb);
-            _dbContext.SaveChanges();
+            _unitOfWork.Auctions.Add(adb);
+            _unitOfWork.Commit();
         }
 
         public void Edit(int id, string description)
         {
-            var adb = _dbContext.AuctionDBs
-                .Find(id);
+            var adb = _unitOfWork.Auctions.Get(id);
             adb.Description = description;
-            _dbContext.SaveChanges();
+            _unitOfWork.Commit();
         }
 
         public void Place(Bid bid)
         {
             BidDB bdb = _mapper.Map<BidDB>(bid);
-            _dbContext.BidDBs.Add(bdb);
-            _dbContext.SaveChanges();
+            _unitOfWork.Bids.Add(bdb);
+            _unitOfWork.Commit();
         }
     }
 }
