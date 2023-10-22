@@ -5,7 +5,7 @@ using AuctionApplication.Persistence.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuctionApplication.Persistence
+namespace AuctionApplication.Persistence    
 {
     public class AuctionSqlPersistence : IAuctionPersistence
     {

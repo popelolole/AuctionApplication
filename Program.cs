@@ -26,7 +26,8 @@ builder.Services.AddDbContext<AuctionDbContext>(options =>
 builder.Services.AddDbContext<AuctionApplicationIdentityContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AuctionDbIdentityConnection")));
 
-builder.Services.AddDefaultIdentity<AuctionApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<AuctionApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AuctionApplicationIdentityContext>();
 
 builder.Services.AddAutoMapper(typeof(Program));
@@ -54,4 +55,36 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+using(var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var roles = new[] { "Admin" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AuctionApplicationUser>>();
+
+    string name = "admin@auctionapp.com";
+
+    if(await userManager.FindByNameAsync(name) == null)
+    {
+        var user = new AuctionApplicationUser();
+        user.UserName = name;
+        user.Email = name;
+
+        await userManager.CreateAsync(user, app.Configuration["Identity:AdminPassword"]);
+
+        await userManager.AddToRoleAsync(user, "Admin");
+    }
+}
+
 app.Run();
