@@ -20,6 +20,9 @@ builder.Services.AddScoped<IBidRepository, BidRepository>();
 builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserPersistence, UserPersistence>();
+
 builder.Services.AddDbContext<AuctionDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AuctionDbConnection")));
 
