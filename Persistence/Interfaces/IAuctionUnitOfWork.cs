@@ -1,6 +1,6 @@
 ﻿namespace AuctionApplication.Persistence.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IAuctionUnitOfWork : IDisposable
     {
         IAuctionRepository Auctions { get; }
         IBidRepository Bids { get; }

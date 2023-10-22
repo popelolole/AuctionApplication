@@ -15,13 +15,16 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IAuctionService, AuctionService>();
 builder.Services.AddScoped<IAuctionPersistence, AuctionSqlPersistence>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserPersistence, UserPersistence>();
 
 builder.Services.AddScoped<IBidRepository, BidRepository>();
 builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserPersistence, UserPersistence>();
+builder.Services.AddScoped<IAuctionUnitOfWork, AuctionUnitOfWork>();
+builder.Services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
+
 
 builder.Services.AddDbContext<AuctionDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AuctionDbConnection")));

@@ -10,9 +10,9 @@ namespace AuctionApplication.Persistence
     public class AuctionSqlPersistence : IAuctionPersistence
     {
         private IMapper _mapper;
-        private IUnitOfWork _unitOfWork;
+        private IAuctionUnitOfWork _unitOfWork;
 
-        public AuctionSqlPersistence(IUnitOfWork unitOfWork, IMapper mapper) 
+        public AuctionSqlPersistence(IAuctionUnitOfWork unitOfWork, IMapper mapper) 
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;

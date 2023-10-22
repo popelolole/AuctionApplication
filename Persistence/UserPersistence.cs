@@ -2,6 +2,7 @@
 using AuctionApplication.Core;
 using AuctionApplication.Core.Interfaces;
 using AuctionApplication.Data;
+using AuctionApplication.Persistence.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
@@ -10,19 +11,16 @@ namespace AuctionApplication.Persistence
 {
     public class UserPersistence : IUserPersistence
     {
-        private AuctionApplicationIdentityContext _dbContext;
+        private IUserUnitOfWork _unitOfWork;
 
-        public UserPersistence(AuctionApplicationIdentityContext dbContext)
+        public UserPersistence(IUserUnitOfWork unitOfWork)
         {
-            _dbContext = dbContext;
+            _unitOfWork = unitOfWork;
         }
 
         public List<User> GetAll()
         {
-            List<AuctionApplicationUser> userDBs = _dbContext.Users
-                .Where(p => p.UserName != "")
-                .OrderBy(p => p.UserName)
-                .ToList();
+            var userDBs = _unitOfWork.Users.GetAll();
 
             List<User> users = new List<User>();
 
@@ -37,16 +35,16 @@ namespace AuctionApplication.Persistence
 
         public User GetById(string id)
         {
-            AuctionApplicationUser userDB = _dbContext.Users.Find(id);
+            AuctionApplicationUser userDB = _unitOfWork.Users.Get(id);
             return new User(userDB.Id, userDB.UserName, userDB.Email, userDB.PhoneNumber);
         }
 
         public void Delete(string id)
         {
-            AuctionApplicationUser userDB = _dbContext.Users.Find(id);
+            AuctionApplicationUser userDB = _unitOfWork.Users.Get(id);
             if (userDB != null) {
-                _dbContext.Users.Remove(userDB);
-                _dbContext.SaveChanges();
+                _unitOfWork.Users.Remove(userDB);
+                _unitOfWork.Commit();
             }
         }
     }
