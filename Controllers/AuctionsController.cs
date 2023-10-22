@@ -101,7 +101,7 @@ namespace AuctionApplication.Controllers
             {
                 auctionVMs.Add(AuctionVM.FromAuction(auction));
             }
-            return View(auctionVMs);
+            return View((userName, (IEnumerable<AuctionVM>) auctionVMs));
         }
 
         // GET: AuctionsController/Create
