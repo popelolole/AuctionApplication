@@ -115,5 +115,11 @@ namespace AuctionApplication.Persistence
             _unitOfWork.Bids.Add(bdb);
             _unitOfWork.Commit();
         }
+
+        public void RemoveById(int id)
+        {
+            _unitOfWork.Auctions.Remove(_unitOfWork.Auctions.GetById(id));
+            _unitOfWork.Commit();
+        }
     }
 }

@@ -19,5 +19,7 @@
         void Edit(int id, string description);
 
         void Place(Bid bid);
+
+        void RemoveById(int id);
     }
 }

@@ -86,5 +86,10 @@ namespace AuctionApplication.Core
             _auctionPersistence.Place(bid);
             return result;
         }
+
+        public void RemoveById(int id)
+        {
+            _auctionPersistence.RemoveById(id);
+        }
     }
 }

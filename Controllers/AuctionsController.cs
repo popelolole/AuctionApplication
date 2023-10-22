@@ -52,6 +52,7 @@ namespace AuctionApplication.Controllers
             return View(auctionVMs);
         }
 
+        // GET: AuctionsController/MyBids
         public ActionResult MyBids()
         {
             string userName = User.Identity.Name;
@@ -64,6 +65,7 @@ namespace AuctionApplication.Controllers
             return View(auctionVMs);
         }
 
+        // GET: AuctionsController/Won
         public ActionResult Won()
         {
             string userName = User.Identity.Name;
@@ -167,27 +169,22 @@ namespace AuctionApplication.Controllers
             return View(vm);
         }
 
-        /*
-// GET: AuctionsController/Delete/5
-public ActionResult Delete(int id)
-{
-return View();
-}
+        // GET: AuctionsController/Delete/5
+        public ActionResult Delete(int id)
+        {
+            Auction auction = _auctionService.GetById(id);
+            AuctionDetailsVM detailsVM = AuctionDetailsVM.FromAuction(auction);
+            return View(detailsVM);
+        }
 
-// POST: AuctionsController/Delete/5
-[HttpPost]
-[ValidateAntiForgeryToken]
-public ActionResult Delete(int id, IFormCollection collection)
-{
-try
-{
-return RedirectToAction(nameof(Index));
-}
-catch
-{
-return View();
-}
-}
-*/
+        // POST: AuctionsController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public ActionResult Delete(int id, IFormCollection fc)
+        {
+            _auctionService.RemoveById(id);
+            return RedirectToAction("Index");
+        }
     }
 }
