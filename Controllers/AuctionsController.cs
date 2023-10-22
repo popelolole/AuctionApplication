@@ -91,6 +91,19 @@ namespace AuctionApplication.Controllers
             return View(auctionVMs);
         }
 
+        // GET: AuctionsController/ByUser?username=user
+        [Authorize(Roles = "Admin")]
+        public ActionResult ByUser(string userName)
+        {
+            List<Auction> auctions = _auctionService.GetAllByUserName(userName);
+            List<AuctionVM> auctionVMs = new();
+            foreach (var auction in auctions)
+            {
+                auctionVMs.Add(AuctionVM.FromAuction(auction));
+            }
+            return View(auctionVMs);
+        }
+
         // GET: AuctionsController/Create
         public ActionResult Create()
         {
@@ -170,6 +183,7 @@ namespace AuctionApplication.Controllers
         }
 
         // GET: AuctionsController/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             Auction auction = _auctionService.GetById(id);
