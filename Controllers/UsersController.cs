@@ -11,10 +11,12 @@ namespace AuctionApplication.Controllers
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IAuctionService _auctionService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IAuctionService auctionService)
         {
             _userService = userService;
+            _auctionService = auctionService;
         }
 
         // GET: UsersController
@@ -43,7 +45,9 @@ namespace AuctionApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string id, IFormCollection collection)
         {
+            string userName = _userService.GetById(id).Name;
             _userService.Delete(id);
+            _auctionService.CascadeByUserName(userName);
             return RedirectToAction("Index");
         }
     }

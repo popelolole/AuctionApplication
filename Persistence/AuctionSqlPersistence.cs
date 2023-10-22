@@ -121,5 +121,27 @@ namespace AuctionApplication.Persistence
             _unitOfWork.Auctions.Remove(_unitOfWork.Auctions.GetById(id));
             _unitOfWork.Commit();
         }
+
+        public void CascadeByUserName(string userName)
+        {
+            IEnumerable<AuctionDB> auctions = _unitOfWork.Auctions.GetAllByUserName(userName);
+
+            IEnumerable<AuctionDB> bidded_auctions = _unitOfWork.Auctions.GetAllActiveByBidUserName(userName);
+            List<BidDB> bids = new();
+            foreach(var auction in bidded_auctions)
+            {
+                foreach(var bid in auction.BidDBs)
+                {
+                    if(bid.UserName == userName)
+                    {
+                        bids.Add(bid);
+                    }
+                }
+            }
+
+            _unitOfWork.Bids.RemoveRange(bids);
+            _unitOfWork.Auctions.RemoveRange(auctions);
+            _unitOfWork.Commit();
+        }
     }
 }

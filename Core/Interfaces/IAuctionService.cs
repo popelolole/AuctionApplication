@@ -13,5 +13,6 @@
         void Edit(int id, string userName);
         ValidationResult Place(Bid bid);
         void RemoveById(int id);
+        void CascadeByUserName(string userName);
     }
 }

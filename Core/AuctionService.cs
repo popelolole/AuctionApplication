@@ -91,5 +91,10 @@ namespace AuctionApplication.Core
         {
             _auctionPersistence.RemoveById(id);
         }
+
+        public void CascadeByUserName(string userName)
+        {
+            _auctionPersistence.CascadeByUserName(userName);
+        }
     }
 }

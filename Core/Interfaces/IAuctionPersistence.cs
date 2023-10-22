@@ -21,5 +21,7 @@
         void Place(Bid bid);
 
         void RemoveById(int id);
+
+        void CascadeByUserName(string userName);
     }
 }
