@@ -78,19 +78,6 @@ namespace AuctionApplication.Controllers
             return View(auctionVMs);
         }
 
-        // JUST FOR TESTING
-        // GET: AuctionsController/All
-        public ActionResult All()
-        {
-            List<Auction> auctions = _auctionService.GetAll();
-            List<AuctionVM> auctionVMs = new();
-            foreach (var auction in auctions)
-            {
-                auctionVMs.Add(AuctionVM.FromAuction(auction));
-            }
-            return View(auctionVMs);
-        }
-
         // GET: AuctionsController/ByUser?username=user
         [Authorize(Roles = "Admin")]
         public ActionResult ByUser(string userName)
