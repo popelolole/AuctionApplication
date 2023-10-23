@@ -122,7 +122,7 @@ namespace AuctionApplication.Controllers
             Auction auction = _auctionService.GetById(id);
             if (!auction.UserName.Equals(User.Identity.Name)) return BadRequest();
             AuctionVM auctionVM = AuctionVM.FromAuction(auction);
-            return View((new EditAuctionVM(), auctionVM));
+            return View();
         }
 
         // POST: AuctionsController/Edit/5
@@ -138,6 +138,7 @@ namespace AuctionApplication.Controllers
                 _auctionService.Edit(id, vm.Description);
                 return RedirectToAction("Created");
             }
+          
             return View(vm);
         }
 
