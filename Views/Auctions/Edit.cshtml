@@ -1,4 +1,4 @@
-﻿@model AuctionApplication.ViewModels.EditAuctionVM
+﻿@model (AuctionApplication.ViewModels.EditAuctionVM vm, AuctionApplication.ViewModels.AuctionVM auction)
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,14 +6,50 @@
 
 <h1>Edit Auction</h1>
 <hr />
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.auction.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.auction.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.auction.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.auction.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.auction.UserName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.auction.UserName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.auction.StartingPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.auction.StartingPrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.auction.ClosingTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.auction.ClosingTime)
+        </dd>
+    </dl>
+</div>
+<hr />
 <div class="row">
     <div class="col-md-4">
+        <div>
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="vm.Description" class="control-label"></label>
+                <input asp-for="vm.Description" class="form-control" />
+                <span asp-validation-for="vm.Description" class="text-danger"></span>
             </div>
             <br>
             <div class="form-group">

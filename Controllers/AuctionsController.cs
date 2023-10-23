@@ -134,7 +134,8 @@ namespace AuctionApplication.Controllers
         {
             Auction auction = _auctionService.GetById(id);
             if (!auction.UserName.Equals(User.Identity.Name)) return BadRequest();
-            return View();
+            AuctionVM auctionVM = AuctionVM.FromAuction(auction);
+            return View((new EditAuctionVM(), auctionVM));
         }
 
         // POST: AuctionsController/Edit/5
@@ -167,7 +168,6 @@ namespace AuctionApplication.Controllers
         public ActionResult Bid(int id, PlaceBidVM vm)
         {
             Auction auction = _auctionService.GetById(id);
-            //TODO: make separate "details" page when looking at own auction
             if (auction.UserName.Equals(User.Identity.Name)) return BadRequest();
 
             if (ModelState.IsValid)
